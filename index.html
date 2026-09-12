@@ -591,18 +591,51 @@ $('readerSize').onchange=()=>readerGo(0);
 $('readerJumpForm').onsubmit=e=>{e.preventDefault();let num=+$('readerNumber').value;if(Number.isInteger(num)&&num>0)openReader(readerState.t,undefined,num);};
 $('reader').addEventListener('close',()=>{readerRequest++;$('readerRows').replaceChildren();});
 
-const packs=()=>document.querySelectorAll('script[data-pack]');
-window.__COOKIE_DATA_PACKS=window.__COOKIE_DATA_PACKS||[];
-function loadNext(){
- let p=packs()[0];
- if(p){
-  const index=Number(p.dataset.pack)-1;
-  const b64=window.__COOKIE_DATA_PACKS[index];
-  if(typeof b64!=='string'){setBusy(false);$('status').textContent='データパック '+(index+1)+' を読み込めませんでした。data-'+(index+1)+'.js が同じフォルダーにあるか確認してください。';return;}
-  worker.postMessage({type:'load',b64});
-  p.remove();
- }else worker.postMessage({type:'finish'});
+const packs = () => document.querySelectorAll('script[data-pack]');
+
+window.__COOKIE_DATA_PACKS =
+    window.__COOKIE_DATA_PACKS || [];
+
+function loadNext() {
+    const p = packs()[0];
+
+    if (!p) {
+        worker.postMessage({ type: 'finish' });
+        return;
+    }
+
+    const index = Number(p.dataset.pack) - 1;
+    const b64 = window.__COOKIE_DATA_PACKS[index];
+
+    if (typeof b64 !== 'string' || b64.length === 0) {
+        console.error(
+            `data-${index + 1}.js のデータが取得できません`,
+            {
+                index,
+                pack: p.dataset.pack
+            }
+        );
+
+        $('status').textContent =
+            `data-${index + 1}.js の読み込みに失敗しました。`;
+
+        setBusy(false);
+        return;
+    }
+
+    console.log(
+        `data-${index + 1}.js: ${b64.length.toLocaleString()} bytes`
+    );
+
+    worker.postMessage({
+        type: 'load',
+        b64
+    });
+
+    p.remove();
 }
+
+
 function start(){try{if(typeof DecompressionStream==='undefined')throw Error('圧縮データの展開に対応した新しいChromeまたはEdgeで開いてください。');let url=URL.createObjectURL(new Blob([$('workerCode').textContent],{type:'text/javascript'}));worker=new Worker(url);URL.revokeObjectURL(url);worker.onerror=e=>{setBusy(false);$('status').textContent='処理を開始できませんでした。HTMLをダウンロードし、ChromeまたはEdgeで直接開いてください。';};worker.onmessage=({data:m})=>{
  if(m.type==='loaded'){loadIndex++;$('status').textContent=loadIndex+' / 8 ファイルを展開・整理しました（'+fmt(m.count)+' 投稿）';$('progress').firstElementChild.style.width=(loadIndex/8*100)+'%';loadNext();}
  if(m.type==='ready'){ready=true;allThreads=m.threads;$('postCount').textContent=fmt(m.count);$('threadCount').textContent=fmt(m.threads.length);const d=n=>String(n).replace(/(\d{4})(\d{2})(\d{2})/,'$1/$2/$3');$('period').textContent=d(m.min)+' – '+d(m.max);let f=document.createDocumentFragment();for(let t of allThreads){let o=document.createElement('option');o.value=t.i;o.textContent=t.title+'（'+fmt(t.count)+'）';f.append(o)}$('thread').append(f);$('search').disabled=false;run();}
@@ -614,7 +647,9 @@ function start(){try{if(typeof DecompressionStream==='undefined')throw Error('�
  if(m.type==='cancelled'){setBusy(false);if(pendingRun){pendingRun=false;run()}else $('status').textContent='検索を中止しました。前の結果を表示しています。';}
  if(m.type==='notice')toast(m.message);
  if(m.type==='error'){setBusy(false);$('status').textContent='エラー：'+m.message;}
- };loadNext();}catch(e){$('status').textContent=e.message;$('results').textContent='HTMLファイルをパソコンにダウンロードして開いてください。'}}
+ };
+ 
+loadNext();}catch(e){$('status').textContent=e.message;$('results').textContent='HTMLファイルをパソコンにダウンロードして開いてください。'}}
 
 /* Rounded Soft-Minimalism: three-position search-mode slider */
 (function(){
