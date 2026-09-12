@@ -342,7 +342,9 @@ button .material-symbols-outlined{pointer-events:none;}
 </style><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20..48,300&icon_names=search,menu,dark_mode,help,language,close,database,tune,translate,verified_user,forum,bookmark,restart_alt,upload_file,file_open,download,chevron_left,chevron_right,arrow_back,menu_book,info,warning,keyboard&display=block" rel="stylesheet">
-</head><body>
+</head>
+
+<body>
 <header class="top"><div class="brand"><span class="material-symbols-rounded brandIcon">search</span><h1>クッキー☆<br>元スレ検索室</h1></div><button class="menuButton iconOnly" id="menuButton" aria-label="メニューを開く" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button></header><nav class="utility" aria-label="補助メニュー"><button id="theme" aria-label="配色を切り替え"><span class="material-symbols-outlined">dark_mode</span><span>ダーク</span></button><button id="help"><span class="material-symbols-outlined">help</span><span>使い方</span></button><button id="languageOpen"><span class="material-symbols-outlined">language</span><span>言語</span></button></nav>
 <div class="drawerBackdrop" id="drawerBackdrop"></div><div class="shell"><aside class="side"><button class="drawerClose iconOnly" id="drawerClose" aria-label="メニューを閉じる"><span class="material-symbols-outlined">close</span></button><section class="panel"><div class="eyebrow">COLLECTION</div><h2 class="sideHeader"><span class="material-symbols-outlined">database</span><span>収録データ</span></h2><div class="stats"><div><strong id="postCount">—</strong><span class="small">投稿</span></div><div><strong id="threadCount">—</strong><span class="small">スレッド</span></div></div><p id="period" class="small" style="margin-top:12px">読み込み準備中</p><p class="fileNote">添付された8ファイルを内蔵。検索は端末内で実行されます。</p></section>
 <section class="panel"><h2 class="sideHeader"><span class="material-symbols-outlined">tune</span><span>絞り込み</span></h2><label>対象スレッド<select id="thread"><option value="">すべてのスレッド</option></select></label><label>スレッド名に含む語句<input id="titleFilter" placeholder="例：総合スレ201"></label><label>投稿者ID（完全一致）<input id="idFilter" placeholder="ID: を除いて入力" spellcheck="false"></label><label>開始日<input id="from" type="date"></label><label>終了日<input id="to" type="date"></label><label>除外語句<input id="exclude" placeholder="スペースで区切る"></label><label>検索する場所<select id="scope"><option value="body">本文</option><option value="all">本文＋投稿ヘッダー</option></select></label><button class="wide" id="reset" style="margin-top:18px">絞り込みをリセット</button><p class="fileNote">条件変更後に「検索」で適用。日付不明の投稿は期間指定時に除外します。</p></section>
@@ -354,10 +356,13 @@ button .material-symbols-outlined{pointer-events:none;}
   <span class="modeLabel and">すべて含む</span><span class="modeLabel or">いずれか含む</span><span class="modeLabel not">含まない</span>
   <span class="srOnly" id="modeLive">検索方式: AND</span>
 </div>
+
 <label class="srOnly"><input type="radio" name="mode" value="and" checked>AND</label>
 <label class="srOnly"><input type="radio" name="mode" value="or">OR</label>
 <label class="srOnly"><input type="radio" name="mode" value="not">NOT</label>
+  
 <label><input id="fold" type="checkbox" checked>全角・半角／英字の大小を区別しない</label>
+  
 </div><div class="history" id="history"></div></form><div class="progress" id="progress"><div></div></div><p class="small status" id="status" role="status" aria-live="polite" style="margin-top:9px">データを展開しています…</p></section>
 <section id="timeline" class="panel hidden" style="margin-top:16px"><details><summary>検索結果の年別分布（棒をクリックして絞り込み）</summary><div id="bars" class="bars"></div><div id="barlabels" class="barlabels"></div></details></section>
 <div class="toolbar"><div><strong id="resultCount">読み込み中</strong><span id="timing" class="small"></span></div><div class="row"><label>並び順 <select id="sort"><option value="source">元データ順</option><option value="new">新しい順（日付）</option><option value="old">古い順（日付）</option></select></label><label>表示 <select id="size"><option>30</option><option>50</option><option>100</option></select></label><button id="export" disabled><span class="material-symbols-outlined">download</span><span>全結果をCSV保存</span></button></div></div><div id="results"><div class="empty"><strong>アーカイブを準備しています</strong>初回の展開には少し時間がかかります。</div></div><div id="pager" class="pager hidden"><button id="prev"><span class="material-symbols-outlined">chevron_left</span><span>前へ</span></button><label><input type="number" id="page" min="1" value="1" aria-label="ページ番号"> / <span id="pages">1</span></label><button id="next"><span>次へ</span><span class="material-symbols-outlined">chevron_right</span></button></div>
