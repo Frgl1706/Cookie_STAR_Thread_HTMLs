@@ -34,7 +34,7 @@ body{
 }
 @font-face{
   font-family:'System Fonts Local';
-  src:url('./System_Fonts.ttf') format('truetype');
+  src:url('System_Fonts.ttf') format('truetype');
   font-style:normal;font-weight:100 900;font-display:swap;
 }
 /* System_Fonts.ttf が無い場合はこのGoogle Fonts定義へ自然にフォールバック */
@@ -137,15 +137,37 @@ body.dark .utility button{color:var(--text)}
 
 /* Three-position touch/mouse slider: AND / OR / NOT */
 .checks{
-  position:relative;display:block;height:128px;margin:25px 0 0;
+  position:relative;display:block;height:auto;margin:25px 0 0;
 }
 .checks label{color:var(--text)}
 .checks label:nth-child(1),.checks label:nth-child(2),.checks label:nth-child(3){display:none}
-.checks>label:last-child{
-  display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.76rem;color:var(--hint);
-  font-weight:300;justify-content:center;
+.optionGrid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px;
 }
-.checks>label:last-child input{width:auto;margin:0}
+.checkOption{
+  position:relative;display:flex!important;align-items:center;gap:11px;min-height:54px;
+  padding:10px 14px;border:1px solid var(--line-strong);border-radius:14px;
+  background:var(--card);color:var(--text)!important;font-size:14px;font-weight:500;
+  line-height:1.45;cursor:pointer;box-shadow:0 2px 7px rgba(15,23,42,.035);
+  transition:border-color .15s ease,background .15s ease,box-shadow .15s ease,transform .12s ease;
+}
+.checkOption:hover{border-color:#94a3b8;box-shadow:0 5px 12px rgba(15,23,42,.055)}
+.checkOption:active{transform:scale(.985)}
+.checkOption input{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
+.checkIcon{
+  flex:0 0 auto;font-size:25px;line-height:1;color:var(--muted);
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+}
+.checkIcon.checked{display:none;color:var(--accent);font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24}
+.checkOption input:checked~.checkIcon.unchecked{display:none}
+.checkOption input:checked~.checkIcon.checked{display:inline-block}
+.checkOption input:checked~.checkText{font-weight:600}
+.checkOption:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(82,109,245,.12)}
+.checkText{min-width:0}
+.checkSub{display:block;margin-top:2px;color:var(--muted);font-size:12px;font-weight:300}
 .modeSlider{
   position:relative;width:100%;height:88px;border:3px solid var(--text);
   border-radius:50px;background:var(--card);touch-action:none;user-select:none;
@@ -242,6 +264,7 @@ dialog::backdrop{background:rgba(15,23,42,.35);backdrop-filter:blur(2px)}
   #searchForm label[for="q"]{font-size:25px;margin-left:6px}
   .searchbox input{height:96px;border-width:4px;border-radius:14px;padding:10px 20px;font-size:28px}
   .checks{height:113px;margin-top:20px}.modeSlider{height:76px;border-width:3px}
+  .optionGrid{grid-template-columns:1fr;gap:8px}.checkOption{min-height:50px;padding:9px 12px;font-size:13px}.checkIcon{font-size:23px}
   .modeKnob{width:66px;height:66px;top:3px}
   .modeSlider[data-mode="or"] .modeKnob{left:calc(50% - 36px)}
   .modeSlider[data-mode="not"] .modeKnob{left:calc(100% - 72px)}
@@ -341,10 +364,8 @@ button .material-symbols-outlined{pointer-events:none;}
 .iconOnly{display:inline-grid!important;place-items:center;}
 </style><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20..48,300&icon_names=search,menu,dark_mode,help,language,close,database,tune,translate,verified_user,forum,bookmark,restart_alt,upload_file,file_open,download,chevron_left,chevron_right,arrow_back,menu_book,info,warning,keyboard&display=block" rel="stylesheet">
-</head>
-
-<body>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20..48,300&icon_names=search,menu,dark_mode,help,language,close,database,tune,translate,verified_user,forum,bookmark,restart_alt,upload_file,file_open,download,chevron_left,chevron_right,arrow_back,menu_book,info,warning,keyboard,check_box,check_box_outline_blank,highlight&display=block" rel="stylesheet">
+</head><body>
 <header class="top"><div class="brand"><span class="material-symbols-rounded brandIcon">search</span><h1>クッキー☆<br>元スレ検索室</h1></div><button class="menuButton iconOnly" id="menuButton" aria-label="メニューを開く" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button></header><nav class="utility" aria-label="補助メニュー"><button id="theme" aria-label="配色を切り替え"><span class="material-symbols-outlined">dark_mode</span><span>ダーク</span></button><button id="help"><span class="material-symbols-outlined">help</span><span>使い方</span></button><button id="languageOpen"><span class="material-symbols-outlined">language</span><span>言語</span></button></nav>
 <div class="drawerBackdrop" id="drawerBackdrop"></div><div class="shell"><aside class="side"><button class="drawerClose iconOnly" id="drawerClose" aria-label="メニューを閉じる"><span class="material-symbols-outlined">close</span></button><section class="panel"><div class="eyebrow">COLLECTION</div><h2 class="sideHeader"><span class="material-symbols-outlined">database</span><span>収録データ</span></h2><div class="stats"><div><strong id="postCount">—</strong><span class="small">投稿</span></div><div><strong id="threadCount">—</strong><span class="small">スレッド</span></div></div><p id="period" class="small" style="margin-top:12px">読み込み準備中</p><p class="fileNote">添付された8ファイルを内蔵。検索は端末内で実行されます。</p></section>
 <section class="panel"><h2 class="sideHeader"><span class="material-symbols-outlined">tune</span><span>絞り込み</span></h2><label>対象スレッド<select id="thread"><option value="">すべてのスレッド</option></select></label><label>スレッド名に含む語句<input id="titleFilter" placeholder="例：総合スレ201"></label><label>投稿者ID（完全一致）<input id="idFilter" placeholder="ID: を除いて入力" spellcheck="false"></label><label>開始日<input id="from" type="date"></label><label>終了日<input id="to" type="date"></label><label>除外語句<input id="exclude" placeholder="スペースで区切る"></label><label>検索する場所<select id="scope"><option value="body">本文</option><option value="all">本文＋投稿ヘッダー</option></select></label><button class="wide" id="reset" style="margin-top:18px">絞り込みをリセット</button><p class="fileNote">条件変更後に「検索」で適用。日付不明の投稿は期間指定時に除外します。</p></section>
@@ -353,16 +374,16 @@ button .material-symbols-outlined{pointer-events:none;}
 <section class="panel"><form id="searchForm"><label class="searchHeading" for="q"><span class="material-symbols-outlined">search</span><span>探したい言葉を入力</span></label><div class="searchbox"><input id="q" type="search" placeholder="語句を入力して、全投稿から検索" autocomplete="off" maxlength="500"><button class="primary" id="search" disabled><span class="material-symbols-outlined">search</span><span>検索</span></button><button type="button" id="cancel" class="hidden">中止</button></div><div class="checks">
 <div class="modeSlider" id="modeSlider" data-mode="and" role="slider" aria-label="検索方式" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0" aria-valuetext="AND検索" tabindex="0">
   <div class="modeTrack" aria-hidden="true"></div><div class="modeKnob" aria-hidden="true"></div>
-  <span class="modeLabel and">すべて含む</span><span class="modeLabel or">     いずれか含む</span><span class="modeLabel not">含まない</span>
+  <span class="modeLabel and">すべて含む</span><span class="modeLabel or">いずれか含む</span><span class="modeLabel not">含まない</span>
   <span class="srOnly" id="modeLive">検索方式: AND</span>
 </div>
-
 <label class="srOnly"><input type="radio" name="mode" value="and" checked>AND</label>
 <label class="srOnly"><input type="radio" name="mode" value="or">OR</label>
 <label class="srOnly"><input type="radio" name="mode" value="not">NOT</label>
-  
-<label><input id="fold" type="checkbox" checked>全角・半角／英字の大小を区別しない</label>
-  
+<div class="optionGrid" aria-label="検索オプション">
+<label class="checkOption" for="fold"><input id="fold" type="checkbox" checked><span class="material-symbols-outlined checkIcon unchecked" aria-hidden="true">check_box_outline_blank</span><span class="material-symbols-outlined checkIcon checked" aria-hidden="true">check_box</span><span class="checkText">全角・半角／英字の大小を区別しない<span class="checkSub">表記ゆれをまとめて検索</span></span></label>
+<label class="checkOption" for="highlight"><input id="highlight" type="checkbox" checked><span class="material-symbols-outlined checkIcon unchecked" aria-hidden="true">check_box_outline_blank</span><span class="material-symbols-outlined checkIcon checked" aria-hidden="true">check_box</span><span class="checkText">検索語を強調表示<span class="checkSub">結果内の一致箇所をハイライト</span></span></label>
+</div>
 </div><div class="history" id="history"></div></form><div class="progress" id="progress"><div></div></div><p class="small status" id="status" role="status" aria-live="polite" style="margin-top:9px">データを展開しています…</p></section>
 <section id="timeline" class="panel hidden" style="margin-top:16px"><details><summary>検索結果の年別分布（棒をクリックして絞り込み）</summary><div id="bars" class="bars"></div><div id="barlabels" class="barlabels"></div></details></section>
 <div class="toolbar"><div><strong id="resultCount">読み込み中</strong><span id="timing" class="small"></span></div><div class="row"><label>並び順 <select id="sort"><option value="source">元データ順</option><option value="new">新しい順（日付）</option><option value="old">古い順（日付）</option></select></label><label>表示 <select id="size"><option>30</option><option>50</option><option>100</option></select></label><button id="export" disabled><span class="material-symbols-outlined">download</span><span>全結果をCSV保存</span></button></div></div><div id="results"><div class="empty"><strong>アーカイブを準備しています</strong>初回の展開には少し時間がかかります。</div></div><div id="pager" class="pager hidden"><button id="prev"><span class="material-symbols-outlined">chevron_left</span><span>前へ</span></button><label><input type="number" id="page" min="1" value="1" aria-label="ページ番号"> / <span id="pages">1</span></label><button id="next"><span>次へ</span><span class="material-symbols-outlined">chevron_right</span></button></div>
@@ -447,7 +468,7 @@ function download(blob,name){let u=URL.createObjectURL(blob),a=document.createEl
 function favCount(){$('favCount').textContent=fmt(favorites.size)}favCount();
 function showHistory(){$('history').replaceChildren();history.slice(0,8).forEach(s=>{let b=document.createElement('button');b.type='button';b.textContent=s;b.onclick=()=>{$('q').value=s;run()};$('history').append(b)})}showHistory();
 const words=s=>Array.from(s.matchAll(/"([^"]+)"|(\S+)/g),m=>m[1]||m[2]);
-function highlight(node,text){let q=lastQ,terms=q?words(q.q):[];if(!terms.length){node.append(document.createTextNode(text));return}
+function highlight(node,text){let q=lastQ,terms=q?words(q.q):[];if(!q?.highlight||!terms.length){node.append(document.createTextNode(text));return}
  let normalized='',map=[];for(let i=0;i<text.length;){let c=String.fromCodePoint(text.codePointAt(i)),n=q.fold?c.normalize('NFKC').toLowerCase():c;normalized+=n;for(let j=0;j<n.length;j++)map.push([i,i+c.length]);i+=c.length;}
  let spans=[];for(let term of terms){term=q.fold?term.normalize('NFKC').toLowerCase():term;if(!term)continue;let p=0;while((p=normalized.indexOf(term,p))>=0){spans.push([map[p][0],map[p+term.length-1][1]]);p+=term.length;}}
  spans.sort((a,b)=>a[0]-b[0]);let merged=[];for(let s of spans){let last=merged.at(-1);if(last&&s[0]<=last[1])last[1]=Math.max(last[1],s[1]);else merged.push(s)}let p=0;for(let [a,b] of merged){node.append(document.createTextNode(text.slice(p,a)));let m=document.createElement('mark');m.textContent=text.slice(a,b);node.append(m);p=b}node.append(document.createTextNode(text.slice(p)));
@@ -478,7 +499,7 @@ function card(r,center){rowsMap.set(r.i,r);let a=document.createElement('article
  footer.append(fav,action('スレッドの全投稿を読む',()=>openReader(r.t,r.i)),expand,action('コピー',async()=>{let text=r.title+'\n'+r.header+'\n'+r.body+'\n'+r.url+r.num;try{await navigator.clipboard.writeText(text);toast('投稿をコピーしました')}catch{let t=document.createElement('textarea');t.value=text;document.body.append(t);t.select();let ok=document.execCommand('copy');t.remove();toast(ok?'投稿をコピーしました':'コピーできませんでした。本文を選択してコピーしてください。')}}));
  a.append(footer);return a;
 }
-function currentQuery(){return {q:$('q').value.trim(),mode:document.querySelector('[name=mode]:checked').value,fold:$('fold').checked,exclude:$('exclude').value,thread:$('thread').value,title:$('titleFilter').value,id:$('idFilter').value.trim().replace(/^ID:/,''),from:$('from').value,to:$('to').value,scope:$('scope').value,sort:$('sort').value,size:+$('size').value,favorites:tab==='favorites',bookmarks:[...favorites]}}
+function currentQuery(){return {q:$('q').value.trim(),mode:document.querySelector('[name=mode]:checked').value,fold:$('fold').checked,highlight:$('highlight').checked,exclude:$('exclude').value,thread:$('thread').value,title:$('titleFilter').value,id:$('idFilter').value.trim().replace(/^ID:/,''),from:$('from').value,to:$('to').value,scope:$('scope').value,sort:$('sort').value,size:+$('size').value,favorites:tab==='favorites',bookmarks:[...favorites]}}
 function setBusy(b){busy=b;$('search').disabled=b||!ready;$('cancel').classList.toggle('hidden',!b);$('export').disabled=b||!total||tab==='threads';$('prev').disabled=b||page===0;$('next').disabled=b||page+1>=Math.ceil(total/(+$('size').value));$('page').disabled=b;$('progress').classList.toggle('hidden',!b)}
 function run(){if(!ready)return;if(tab==='threads'){renderThreads();return}let q=currentQuery();if(q.from&&q.to&&q.from>q.to){toast('開始日は終了日以前にしてください。');return}if(q.q){history=[q.q,...history.filter(s=>s!==q.q)].slice(0,8);save('history',history);showHistory()}setBusy(true);$('status').textContent='全投稿を検索中…';$('progress').firstElementChild.style.width='0%';worker.postMessage({type:'search',q})}
 function switchTab(t){tab=t;document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===t);b.setAttribute('aria-pressed',b.dataset.tab===t)});$('timeline').classList.toggle('hidden',t==='threads');$('export').disabled=t==='threads'||!total||busy;}
@@ -571,7 +592,17 @@ $('readerJumpForm').onsubmit=e=>{e.preventDefault();let num=+$('readerNumber').v
 $('reader').addEventListener('close',()=>{readerRequest++;$('readerRows').replaceChildren();});
 
 const packs=()=>document.querySelectorAll('script[data-pack]');
-function loadNext(){let p=packs()[0];if(p){worker.postMessage({type:'load',b64:p.textContent});p.remove();}else worker.postMessage({type:'finish'});}
+window.__COOKIE_DATA_PACKS=window.__COOKIE_DATA_PACKS||[];
+function loadNext(){
+ let p=packs()[0];
+ if(p){
+  const index=Number(p.dataset.pack)-1;
+  const b64=window.__COOKIE_DATA_PACKS[index];
+  if(typeof b64!=='string'){setBusy(false);$('status').textContent='データパック '+(index+1)+' を読み込めませんでした。data-'+(index+1)+'.js が同じフォルダーにあるか確認してください。';return;}
+  worker.postMessage({type:'load',b64});
+  p.remove();
+ }else worker.postMessage({type:'finish'});
+}
 function start(){try{if(typeof DecompressionStream==='undefined')throw Error('圧縮データの展開に対応した新しいChromeまたはEdgeで開いてください。');let url=URL.createObjectURL(new Blob([$('workerCode').textContent],{type:'text/javascript'}));worker=new Worker(url);URL.revokeObjectURL(url);worker.onerror=e=>{setBusy(false);$('status').textContent='処理を開始できませんでした。HTMLをダウンロードし、ChromeまたはEdgeで直接開いてください。';};worker.onmessage=({data:m})=>{
  if(m.type==='loaded'){loadIndex++;$('status').textContent=loadIndex+' / 8 ファイルを展開・整理しました（'+fmt(m.count)+' 投稿）';$('progress').firstElementChild.style.width=(loadIndex/8*100)+'%';loadNext();}
  if(m.type==='ready'){ready=true;allThreads=m.threads;$('postCount').textContent=fmt(m.count);$('threadCount').textContent=fmt(m.threads.length);const d=n=>String(n).replace(/(\d{4})(\d{2})(\d{2})/,'$1/$2/$3');$('period').textContent=d(m.min)+' – '+d(m.max);let f=document.createDocumentFragment();for(let t of allThreads){let o=document.createElement('option');o.value=t.i;o.textContent=t.title+'（'+fmt(t.count)+'）';f.append(o)}$('thread').append(f);$('search').disabled=false;run();}
@@ -640,12 +671,22 @@ window.addEventListener('DOMContentLoaded',start);
 </script>
 
 
-<script type="text/javascript" data-pack="1" src="./data-1.js"></script>
-<script type="text/javascript" data-pack="2" src="./data-2.js"></script>
-<script type="text/javascript" data-pack="3" src="./data-3.js"></script>
-<script type="text/javascript" data-pack="4" src="./data-4.js"></script>
-<script type="text/javascript" data-pack="5" src="./data-5.js"></script>
-<script type="text/javascript" data-pack="6" src="./data-6.js"></script>
-<script type="text/javascript" data-pack="7" src="./data-7.js"></script>
-<script type="text/javascript" data-pack="8" src="./data-8.js"></script>
+
+
+
+
+
+
+
+
+
+<!-- ===== External data packs: data-1.js ～ data-8.js ===== -->
+<script type="text/javascript" data-pack="1" src="data-1.js"></script>
+<script type="text/javascript" data-pack="2" src="data-2.js"></script>
+<script type="text/javascript" data-pack="3" src="data-3.js"></script>
+<script type="text/javascript" data-pack="4" src="data-4.js"></script>
+<script type="text/javascript" data-pack="5" src="data-5.js"></script>
+<script type="text/javascript" data-pack="6" src="data-6.js"></script>
+<script type="text/javascript" data-pack="7" src="data-7.js"></script>
+<script type="text/javascript" data-pack="8" src="data-8.js"></script>
 </body></html>
